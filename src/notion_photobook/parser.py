@@ -14,6 +14,10 @@ from urllib.parse import unquote
 
 import requests
 from bs4 import BeautifulSoup
+from rich.console import Console
+
+# Rich console for consistent output
+console = Console()
 
 
 class NotionParser:
@@ -61,11 +65,27 @@ class NotionParser:
         entries = []
         table = soup.find("table")
         if not table:
+            console.print(f"⚠️  No table found in {html_file}")
             return entries
         
+        # Try different possible CSS class patterns for Notion exports
+        title_cell_classes = ["cell-title", "cell-title-text", "title-cell"]
+        date_cell_classes = ["cell-DUXv", "cell-date", "date-cell", "cell-day"]
+        
         for row in table.find_all("tr"):
-            title_cell = row.find("td", class_="cell-title")
-            date_cell = row.find("td", class_="cell-DUXv")
+            # Try to find title cell with different class patterns
+            title_cell = None
+            for class_name in title_cell_classes:
+                title_cell = row.find("td", class_=class_name)
+                if title_cell:
+                    break
+            
+            # Try to find date cell with different class patterns
+            date_cell = None
+            for class_name in date_cell_classes:
+                date_cell = row.find("td", class_=class_name)
+                if date_cell:
+                    break
             
             if title_cell and date_cell:
                 link = title_cell.find("a")
@@ -83,6 +103,10 @@ class NotionParser:
                         "date": date,
                         "filepath": full_path
                     })
+        
+        if not entries:
+            console.print(f"⚠️  No entries found in table. This might not be a valid Notion export.")
+            console.print(f"   Expected CSS classes: {title_cell_classes} for titles, {date_cell_classes} for dates")
         
         return entries
     
@@ -130,7 +154,7 @@ class NotionParser:
             }
             
         except Exception as e:
-            print(f"Failed to read {entry['filepath']}: {e}")
+            console.print(f"Failed to read {entry['filepath']}: {e}")
             return None
     
     def _parse_day(self, day_str: str) -> datetime:
@@ -202,10 +226,10 @@ def parse_notion_export(input_folder: Path, output_json: Optional[Path] = None,
     
     if output_json:
         parser.save_json(records, output_json)
-        print(f"Saved {len(records)} entries to {output_json}")
+        console.print(f"Saved {len(records)} entries to {output_json}")
     
     if test_json:
         parser.create_test_data(records, test_json)
-        print(f"Saved test data to {test_json}")
+        console.print(f"Saved test data to {test_json}")
     
     return records 

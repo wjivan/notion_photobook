@@ -5,8 +5,8 @@ Convert Notion HTML exports into beautiful print-ready photobooks.
 """
 
 __version__ = "0.1.0"
-__author__ = "Your Name"
-__email__ = "your.email@example.com"
+__author__ = "Notion Photobook Team"
+__email__ = "contact@notion-photobook.dev"
 
 from .core import NotionPhotobookGenerator
 from .config import PhotobookConfig, Layout, PaperSize

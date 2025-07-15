@@ -1,0 +1,2 @@
+[console_scripts]
+photobookgen = notion_photobook.cli:main

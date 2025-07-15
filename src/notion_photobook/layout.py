@@ -12,6 +12,10 @@ from pathlib import Path
 from PIL import Image
 from reportlab.lib.utils import ImageReader
 from rectpack import newPacker, PackingMode, MaxRectsBssf
+from rich.console import Console
+
+# Rich console for consistent output
+console = Console()
 
 
 class ImageLayout:
@@ -29,6 +33,9 @@ class ImageLayout:
         Args:
             img_dir: Directory containing images
         """
+        processed_count = 0
+        error_count = 0
+        
         for fname in os.listdir(img_dir):
             if not fname.lower().endswith((".jpg", ".jpeg", ".png")):
                 continue
@@ -40,12 +47,25 @@ class ImageLayout:
                     if max(w, h) <= self.max_long_edge_px:
                         continue  # already small enough
                     
+                    # Create backup before modifying
+                    backup_path = path.with_suffix(f".backup{path.suffix}")
+                    if not backup_path.exists():
+                        im.save(backup_path, quality=95)
+                    
                     scale = self.max_long_edge_px / max(w, h)
                     new_size = (int(w * scale), int(h * scale))
-                    im = im.resize(new_size, Image.LANCZOS)
+                    im = im.resize(new_size, Image.Resampling.LANCZOS)
                     im.save(path, quality=90, optimize=True)
+                    processed_count += 1
+                    
             except Exception as e:
-                print(f"⚠️  Down-sample skipped for {fname}: {e}")
+                error_count += 1
+                console.print(f"⚠️  Down-sample skipped for {fname}: {e}")
+        
+        if processed_count > 0:
+            console.print(f"✅ Downsampled {processed_count} images")
+        if error_count > 0:
+            console.print(f"⚠️  Failed to downsample {error_count} images")
     
     def pack_photos(self, photo_paths: List[str], pane_w: float, pane_h: float, 
                    pad: int, img_dir: Path) -> List[Dict[str, Any]]:

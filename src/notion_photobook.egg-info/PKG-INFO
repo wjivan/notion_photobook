@@ -1,3 +1,46 @@
+Metadata-Version: 2.4
+Name: notion-photobook
+Version: 0.1.0
+Summary: Convert Notion HTML exports into beautiful print-ready photobooks
+Author-email: Notion Photobook Team <contact@notion-photobook.dev>
+Maintainer-email: Notion Photobook Team <contact@notion-photobook.dev>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/notion-photobook/notion-photobook
+Project-URL: Repository, https://github.com/notion-photobook/notion-photobook
+Project-URL: Documentation, https://github.com/notion-photobook/notion-photobook#readme
+Project-URL: Issues, https://github.com/notion-photobook/notion-photobook/issues
+Keywords: notion,photobook,pdf,layout,printing
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Multimedia :: Graphics
+Classifier: Topic :: Text Processing :: Markup :: HTML
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: reportlab>=4.0.0
+Requires-Dist: Pillow>=10.0.0
+Requires-Dist: rectpack>=0.2.0
+Requires-Dist: beautifulsoup4>=4.12.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: typer>=0.9.0
+Requires-Dist: rich>=13.0.0
+Requires-Dist: tqdm>=4.65.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Dynamic: license-file
+
 # Notion Photobook Generator 📚
 
 Convert Notion HTML exports into beautiful print-ready photobooks with automatic image layout and text formatting.
@@ -37,12 +80,6 @@ python3 -m pip install --upgrade pip
 # Install the package
 pip3 install -e .
 ```
-
-> **Note:** For development, always use the CLI from your virtual environment:
-> ```sh
-> .venv/bin/photobookgen --help
-> ```
-> or add `.venv/bin` to your PATH. Only use the global/user version if you explicitly install it with `pip3 install --user -e .` and add the user base bin (e.g., `~/Library/Python/3.9/bin`) to your PATH.
 
 **Note:** If you install with `pip3 install --user`, the `photobookgen` command may not be in your PATH.
 

@@ -37,7 +37,7 @@ def check_path_setup():
     # Check if we can find the script in PATH
     import shutil
     if shutil.which(script_name) is None:
-        # Try to find where pip installed it
+        # Try to find where pip3 installed it
         import site
         user_site = site.getusersitepackages()
         if user_site:
@@ -86,7 +86,7 @@ def parse_date(date_str: str) -> datetime:
 
 
 @app.command()
-def main(
+def generate(
     input_folder: Path = typer.Argument(
         ...,
         help="Path to Notion HTML export folder",
@@ -386,6 +386,30 @@ def setup() -> None:
     
     # Try to find the script location
     import site
+    import sys
+    
+    # Check virtual environment first
+    if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+        script_dir = Path(sys.prefix) / "bin"
+        if (script_dir / "photobookgen").exists():
+            console.print(f"📍 Script location: [bold]{script_dir}[/bold]\n")
+            
+            console.print("To add to your PATH, choose one of these options:\n")
+            
+            console.print("1️⃣ [bold]Temporary (current session only):[/bold]")
+            console.print(f"   [code]export PATH=\"{script_dir}:$PATH\"[/code]\n")
+            
+            console.print("2️⃣ [bold]Permanent (recommended):[/bold]")
+            console.print("   Add this line to your shell config file:")
+            console.print(f"   [code]export PATH=\"{script_dir}:$PATH\"[/code]")
+            console.print("   Then restart your terminal or run: [code]source ~/.zshrc[/code]\n")
+            
+            console.print("3️⃣ [bold]Alternative:[/bold]")
+            console.print("   Run the tool directly:")
+            console.print(f"   [code]{script_dir}/photobookgen --help[/code]\n")
+            return
+    
+    # Check user site packages
     user_site = site.getusersitepackages()
     if user_site:
         script_dir = Path(user_site).parent / "bin"
@@ -405,13 +429,15 @@ def setup() -> None:
             console.print("3️⃣ [bold]Alternative:[/bold]")
             console.print("   Run the tool directly:")
             console.print(f"   [code]{script_dir}/photobookgen --help[/code]\n")
-        else:
-            console.print("❌ Could not find the photobookgen script.")
-            console.print("   Try reinstalling the package.")
-    else:
-        console.print("❌ Could not determine script location.")
-        console.print("   Try reinstalling the package.")
+            return
+    
+    console.print("❌ Could not find the photobookgen script.")
+    console.print("   Try reinstalling the package.")
 
+
+def main():
+    """Main entry point for the CLI."""
+    app()
 
 if __name__ == "__main__":
-    app() 
+    main() 

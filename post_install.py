@@ -13,11 +13,37 @@ from pathlib import Path
 
 def get_script_location():
     """Get the location where the photobookgen script was installed."""
+    # Check user site packages first (for --user installations)
     user_site = site.getusersitepackages()
     if user_site:
         script_dir = Path(user_site).parent / "bin"
         if (script_dir / "photobookgen").exists():
             return script_dir
+    
+    # Check user base bin (pip3 --user installs)
+    user_base_bin = Path(site.USER_BASE) / "bin"
+    if (user_base_bin / "photobookgen").exists():
+        return user_base_bin
+    
+    # Check system site packages
+    for site_dir in site.getsitepackages():
+        script_dir = Path(site_dir).parent / "bin"
+        if (script_dir / "photobookgen").exists():
+            return script_dir
+    
+    # Check virtual environment
+    if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+        # We're in a virtual environment
+        script_dir = Path(sys.prefix) / "bin"
+        if (script_dir / "photobookgen").exists():
+            return script_dir
+    
+    # Fallback: try to find in PATH
+    import shutil
+    script_path = shutil.which("photobookgen")
+    if script_path:
+        return Path(script_path).parent
+    
     return None
 
 

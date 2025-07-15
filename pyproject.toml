@@ -7,18 +7,17 @@ name = "notion-photobook"
 version = "0.1.0"
 description = "Convert Notion HTML exports into beautiful print-ready photobooks"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Notion Photobook Team", email = "contact@notion-photobook.dev"}
 ]
 maintainers = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Notion Photobook Team", email = "contact@notion-photobook.dev"}
 ]
 keywords = ["notion", "photobook", "pdf", "layout", "printing"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -54,20 +53,14 @@ dev = [
 [project.scripts]
 photobookgen = "notion_photobook.cli:main"
 
-[project.entry-points."console_scripts"]
-photobookgen = "notion_photobook.cli:main"
-
 [project.urls]
-Homepage = "https://github.com/yourusername/notion-photobook"
-Repository = "https://github.com/yourusername/notion-photobook"
-Documentation = "https://github.com/yourusername/notion-photobook#readme"
-Issues = "https://github.com/yourusername/notion-photobook/issues"
+Homepage = "https://github.com/notion-photobook/notion-photobook"
+Repository = "https://github.com/notion-photobook/notion-photobook"
+Documentation = "https://github.com/notion-photobook/notion-photobook#readme"
+Issues = "https://github.com/notion-photobook/notion-photobook/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-notion_photobook = ["assets/*"]
 
 [tool.black]
 line-length = 88

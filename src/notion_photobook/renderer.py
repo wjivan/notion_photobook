@@ -17,8 +17,12 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from tqdm import tqdm
+from rich.console import Console
 
 from .layout import LayoutEngine, ImageLayout, TextLayout
+
+# Rich console for consistent output
+console = Console()
 
 
 class BackgroundRenderer:
@@ -260,8 +264,8 @@ class PhotobookRenderer:
                 pane_idx += 1
         
         c.save()
-        print(f"✅ Photobook saved to: {output_path}")
-        print(f"📄 Total pages: ≈ {pane_idx // 2 + pane_idx % 2 if self.config.layout.value == 'landscape' else pane_idx}")
+        console.print(f"✅ Photobook saved to: {output_path}")
+        console.print(f"📄 Total pages: ≈ {pane_idx // 2 + pane_idx % 2 if self.config.layout.value == 'landscape' else pane_idx}")
     
     def downsample_images(self, img_dir: Path) -> None:
         """Downsample images in directory to optimize memory usage."""

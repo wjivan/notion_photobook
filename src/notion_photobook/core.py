@@ -9,9 +9,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
+from rich.console import Console
+
 from .config import PhotobookConfig, Layout, PaperSize
 from .parser import NotionParser, parse_notion_export
 from .renderer import PhotobookRenderer
+
+# Rich console for consistent output
+console = Console()
 
 
 class NotionPhotobookGenerator:
@@ -50,7 +55,7 @@ class NotionPhotobookGenerator:
             max_date: Optional maximum date to include
             downsample_images: Whether to downsample images for optimization
         """
-        print(f"📖 Parsing Notion export from: {input_folder}")
+        console.print(f"📖 Parsing Notion export from: {input_folder}")
         
         # Parse Notion export
         parser = NotionParser(input_folder)
@@ -59,7 +64,7 @@ class NotionPhotobookGenerator:
         if not entries:
             raise ValueError("No entries found in Notion export")
         
-        print(f"📝 Found {len(entries)} entries")
+        console.print(f"📝 Found {len(entries)} entries")
         
         # Use input folder as image directory if not specified
         if img_dir is None:
@@ -82,7 +87,7 @@ class NotionPhotobookGenerator:
             img_dir: Directory containing images
             downsample_images: Whether to downsample images for optimization
         """
-        print(f"📖 Loading entries from: {json_path}")
+        console.print(f"📖 Loading entries from: {json_path}")
         
         with open(json_path, 'r', encoding='utf-8') as f:
             entries = json.load(f)
@@ -90,7 +95,7 @@ class NotionPhotobookGenerator:
         if not entries:
             raise ValueError("No entries found in JSON file")
         
-        print(f"📝 Loaded {len(entries)} entries")
+        console.print(f"📝 Loaded {len(entries)} entries")
         
         self.generate_from_entries(entries, output_path, img_dir, downsample_images)
     
@@ -108,14 +113,14 @@ class NotionPhotobookGenerator:
             img_dir: Directory containing images
             downsample_images: Whether to downsample images for optimization
         """
-        print(f"🎨 Generating photobook...")
-        print(f"   Layout: {self.config.layout.value}")
-        print(f"   Paper size: {self.config.paper_size.value}")
-        print(f"   Images directory: {img_dir}")
+        console.print(f"🎨 Generating photobook...")
+        console.print(f"   Layout: {self.config.layout.value}")
+        console.print(f"   Paper size: {self.config.paper_size.value}")
+        console.print(f"   Images directory: {img_dir}")
         
         # Downsample images if requested
         if downsample_images:
-            print("🖼️  Downsampling images for optimization...")
+            console.print("🖼️  Downsampling images for optimization...")
             self.renderer.downsample_images(img_dir)
         
         # Create photobook
@@ -176,7 +181,7 @@ class NotionPhotobookGenerator:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(demo_entries, f, ensure_ascii=False, indent=2)
         
-        print(f"📝 Demo data saved to: {output_path}")
+        console.print(f"📝 Demo data saved to: {output_path}")
 
 
 def create_photobook(input_folder: Path,
