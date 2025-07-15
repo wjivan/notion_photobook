@@ -1,0 +1,6 @@
+.env
+*.csv
+*.html
+*.json
+.venv/
+.DS_Store
